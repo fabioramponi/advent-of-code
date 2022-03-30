@@ -91,3 +91,9 @@ func IgnoreError[retType interface{}](ret retType, err error) retType {
 	Check(err)
 	return ret
 }
+
+func Assert(pred bool) {
+	if !pred {
+		panic("assertion failed")
+	}
+}
