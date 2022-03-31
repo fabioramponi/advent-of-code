@@ -17,6 +17,7 @@ var solutions map[int]func([]string) []string = map[int]func([]string) []string{
 	5: day05,
 	6: day06,
 	7: day07,
+	8: day08,
 }
 
 func main() {
