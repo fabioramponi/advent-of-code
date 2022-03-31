@@ -38,7 +38,6 @@ func day08(input []string) []string {
 	res2 := 0
 	for _, s := range input {
 		literal, chars, additionalCharsForEncoding := countChars(s)
-		fmt.Println(s, literal, chars)
 		res1 += literal - chars
 		res2 += additionalCharsForEncoding
 	}
