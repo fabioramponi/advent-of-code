@@ -97,7 +97,7 @@ impl DayChallenge for Day02 {
                 "Z" => {
                     self.wins
                         .iter()
-                        .filter(|(k, &v)| v == opponent_move)
+                        .filter(|(_k, &v)| v == opponent_move)
                         .next()
                         .expect("")
                         .0
