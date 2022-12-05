@@ -1,0 +1,10 @@
+[workspace]
+
+members = [
+  "runner",
+  "days",
+  "utils"
+]
+
+[env]
+AOC2022_RESOURCES={ value = "resources", relative = true }
