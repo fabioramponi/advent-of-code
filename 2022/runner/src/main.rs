@@ -24,7 +24,7 @@ fn main() {
 fn run_challenge(day: u8) {
     let day_challenge = days::get_day(day, Purpose::Challenge);
     match day_challenge {
-        Some(b) => {
+        Some(mut b) => {
             println!("Day {:02} - Part 1 : {}", day, (*b).part_1());
             println!("Day {:02} - Part 2 : {}", day, (*b).part_2());
         }

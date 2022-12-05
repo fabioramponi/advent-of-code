@@ -38,7 +38,7 @@ impl Day03 {
 }
 
 impl DayChallenge for Day03 {
-    fn part_1(&self) -> String {
+    fn part_1(&mut self) -> String {
         let mut total: u32 = 0;
         self.rucksacks.iter().for_each(|rucksack| {
             let item_types_1: HashSet<u8> =
@@ -55,7 +55,7 @@ impl DayChallenge for Day03 {
         return total.to_string();
     }
 
-    fn part_2(&self) -> String {
+    fn part_2(&mut self) -> String {
         let mut total: u32 = 0;
         self.rucksacks.chunks(3).for_each(|group| {
             let intersection: HashSet<u8> = group.iter().skip(1).fold(
@@ -99,13 +99,13 @@ mod tests {
 
     #[test]
     fn part_1_works() {
-        let day_03 = init_test();
+        let mut day_03 = init_test();
         assert_eq!(day_03.part_1(), "157");
     }
 
     #[test]
     fn part_2_works() {
-        let day_03 = init_test();
+        let mut day_03 = init_test();
         assert_eq!(day_03.part_2(), "70");
     }
 }

@@ -46,7 +46,7 @@ impl Day04 {
 }
 
 impl DayChallenge for Day04 {
-    fn part_1(&self) -> String {
+    fn part_1(&mut self) -> String {
         self.pairs
             .iter()
             .filter(|p| p.fully_includes() > 0)
@@ -54,7 +54,7 @@ impl DayChallenge for Day04 {
             .to_string()
     }
 
-    fn part_2(&self) -> String {
+    fn part_2(&mut self) -> String {
         self.pairs
             .iter()
             .filter(|p| p.overlap())
@@ -116,13 +116,13 @@ mod tests {
 
     #[test]
     fn part_1_works() {
-        let day_04 = init_test();
+        let mut day_04 = init_test();
         assert_eq!(day_04.part_1(), "2");
     }
 
     #[test]
     fn part_2_works() {
-        let day_04 = init_test();
+        let mut day_04 = init_test();
         assert_eq!(day_04.part_2(), "4");
     }
 }

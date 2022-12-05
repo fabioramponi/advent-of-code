@@ -15,7 +15,7 @@ impl Day01 {
 }
 
 impl DayChallenge for Day01 {
-    fn part_1(&self) -> String {
+    fn part_1(&mut self) -> String {
         self.energies
             .iter()
             .max()
@@ -24,7 +24,7 @@ impl DayChallenge for Day01 {
             .to_string()
     }
 
-    fn part_2(&self) -> String {
+    fn part_2(&mut self) -> String {
         let mut energies = self.energies.clone();
         energies.sort_by(|a, b| b.cmp(a));
         let s: i32 = energies.iter().take(3).sum();
@@ -59,13 +59,13 @@ mod tests {
 
     #[test]
     fn part_1_works() {
-        let day_01 = init_test();
+        let mut day_01 = init_test();
         assert_eq!(day_01.part_1(), "24000");
     }
 
     #[test]
     fn part_2_works() {
-        let day_01 = init_test();
+        let mut day_01 = init_test();
         assert_eq!(day_01.part_2(), "45000");
     }
 }

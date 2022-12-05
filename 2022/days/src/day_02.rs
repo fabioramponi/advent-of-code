@@ -56,7 +56,7 @@ impl Day02 {
 }
 
 impl DayChallenge for Day02 {
-    fn part_1(&self) -> String {
+    fn part_1(&mut self) -> String {
         let mapping: HashMap<String, Output> = HashMap::from([
             (String::from("A"), Output::ROCK),
             (String::from("B"), Output::PAPER),
@@ -82,7 +82,7 @@ impl DayChallenge for Day02 {
             .to_string()
     }
 
-    fn part_2(&self) -> String {
+    fn part_2(&mut self) -> String {
         let mapping: HashMap<String, Output> = HashMap::from([
             (String::from("A"), Output::ROCK),
             (String::from("B"), Output::PAPER),
@@ -140,13 +140,13 @@ mod tests {
 
     #[test]
     fn part_1_works() {
-        let day_02 = init_test();
+        let mut day_02 = init_test();
         assert_eq!(day_02.part_1(), "15");
     }
 
     #[test]
     fn part_2_works() {
-        let day_02 = init_test();
+        let mut day_02 = init_test();
         assert_eq!(day_02.part_2(), "12");
     }
 }
