@@ -1,6 +1,6 @@
-use std::{cell::RefCell, rc::Rc};
-
 use utils::{read_input, Purpose};
+
+use utils::arena_tree::ArenaTree;
 
 use crate::DayChallenge;
 
@@ -8,24 +8,35 @@ trait WithSize {
     fn size(&self) -> u32;
 }
 
-struct Directory2 {
+#[derive(Debug)]
+struct Directory {
     name: String,
-    parent: Option<Rc<RefCell<Directory2>>>,
     files: Vec<File>,
-    children: Vec<Rc<RefCell<Directory2>>>,
 }
 
-impl WithSize for Directory2 {
-    fn size(&self) -> u32 {
-        self.files.iter().map(|f| f.size()).sum::<u32>()
-            + self.children.iter().map(|c| c.borrow().size()).sum::<u32>()
+impl Default for Directory {
+    fn default() -> Self {
+        Directory { name: String::from("/"), files: vec![] }
+    }
+}
+impl PartialEq for Directory {
+    fn eq(&self, other: &Self) -> bool {
+        self.name == other.name
     }
 }
 
+impl Directory {
+    fn with_name(dir_name: String) -> Directory {
+        Directory{name: dir_name, files: vec![]}
+    }
+}
+
+
+#[derive(Debug)]
 struct File {
     size: u32,
     name: String,
-    dir: Rc<RefCell<Directory2>>,
+    dir: usize,
 }
 
 impl WithSize for File {
@@ -34,43 +45,24 @@ impl WithSize for File {
     }
 }
 
-struct FileSystem2 {
-    root: Rc<RefCell<Directory2>>,
-    current_dir: Rc<RefCell<Directory2>>,
+#[derive(Debug)]
+struct FileSystem {
+    tree :ArenaTree<Directory>,
+    current_dir: usize
 }
 
-impl FileSystem2 {
+impl FileSystem {
+
     fn cd(&mut self, new_dir: &str) {
         self.current_dir = match new_dir {
-            "/" => Rc::clone(&(self.root)),
-            ".." => Rc::clone(&(self.current_dir)).borrow().parent.unwrap(),
-            &_ => todo!(),
-            /*a => {
-                match self
-                    .current_dir
-                    .borrow()
-                    .children
-                    .iter()
-                    .find(|b| b.borrow().name == a)
-                {
-                    None => {
-                        let dir = Directory2 {
-                            name: String::from(a),
-                            parent: None, //Some(curdir),
-                            files: vec![],
-                            children: vec![],
-                        };
-                        self.current_dir
-                            .borrow_mut()
-                            .children
-                            .push(Rc::new(RefCell::new(dir)));
-                        Rc::new(RefCell::new(dir))
-                    }
-                    Some(&d) => d,
-                }
-            }*/
-        };
-    }
+            "/" => self.tree.node(Directory{name: String::from("/"), files: vec![]}),
+            ".." => self.tree.arena[self.current_dir].parent.unwrap(),
+            a => {
+                let dir_full_name = format!("{}/{}",self.tree.arena[self.current_dir].val.name, a); 
+                self.tree.insert_or_get(Directory::with_name(dir_full_name), self.current_dir)
+            }
+    };}
+
 
     fn ls(&mut self, output: &[String]) {
         for f in output {
@@ -78,25 +70,8 @@ impl FileSystem2 {
             let sz_or_dir = file_info.next().unwrap();
             let fname = file_info.next().unwrap();
             if sz_or_dir == "dir" {
-                if self
-                    .current_dir
-                    .borrow()
-                    .children
-                    .iter()
-                    .find(|b| b.borrow().name == sz_or_dir)
-                    .is_none()
-                {
-                    let dir = Directory2 {
-                        name: String::from(fname),
-                        parent: Some(Rc::clone(&self.current_dir)),
-                        files: vec![],
-                        children: vec![],
-                    };
-                    self.current_dir
-                        .borrow_mut()
-                        .children
-                        .push(Rc::new(RefCell::new(dir)));
-                }
+                let dir_full_name = format!("{}/{}", self.tree.arena[self.current_dir].val.name, fname);
+                let _ = self.tree.insert_or_get(Directory::with_name(dir_full_name), self.current_dir);
             } else {
                 let sz: u32 = sz_or_dir.parse::<u32>().unwrap();
                 self.add_file(String::from(fname), sz)
@@ -105,36 +80,34 @@ impl FileSystem2 {
     }
 
     fn add_file(&mut self, name: String, sz: u32) {
-        let files: &mut Vec<File> = &mut self.current_dir.borrow_mut().files;
+        let files: &mut Vec<File> = &mut self.tree.arena[self.current_dir].val.files;
         let exists = files.iter().find(|f| f.name == name);
         if exists.is_none() {
             files.push(File {
                 name: name,
-                dir: Rc::clone(&self.current_dir),
+                dir: self.current_dir,
                 size: sz,
             })
         }
     }
 
-    fn new() -> FileSystem2 {
-        let root = Rc::new(RefCell::new(Directory2 {
-            name: String::from("/"),
-            parent: Option::None,
-            files: vec![],
-            children: vec![],
-        }));
+    fn size(&self, idx: usize) -> u32 {
+        let directory = &self.tree.arena[idx];
+        let size = directory.val.files.iter().fold(0,|acc, f| acc + f.size);
+        directory.children.iter().fold(size, |acc, &c| acc +  self.size(c))
+    }
 
-        let ref_1 = Rc::clone(&root);
+    fn new() -> FileSystem {
 
-        FileSystem2 {
-            root: ref_1,
-            current_dir: Rc::clone(&root),
+        FileSystem {
+            tree: ArenaTree::default(),
+            current_dir: 0,
         }
     }
 }
 
 pub struct Day07 {
-    fs: FileSystem2,
+    fs: FileSystem,
 }
 
 impl Day07 {
@@ -147,17 +120,24 @@ impl Day07 {
 
 impl DayChallenge for Day07 {
     fn part_1(&mut self) -> String {
-        String::from("")
+        let sizes = self.fs.tree.arena.iter().map(|d| self.fs.size(d.idx)).collect::<Vec<u32>>();
+        let res = sizes.iter().filter(|&&sz| sz < 100000).sum::<u32>();
+        res.to_string()
     }
 
     fn part_2(&mut self) -> String {
-        String::from("")
+        let total_disk_space :u32 = 70000000;
+        let min_unused_space :u32 = 30000000;
+        let total_size = self.fs.size(0);
+        let mut sizes = self.fs.tree.arena.iter().map(|d| self.fs.size(d.idx)).collect::<Vec<u32>>();
+        sizes.sort();
+        sizes.iter().find(|&&sz| (total_disk_space-(total_size-sz)) >= min_unused_space).unwrap().to_string()
     }
 }
 
-fn parse_input(purp: Purpose) -> FileSystem2 {
+fn parse_input(purp: Purpose) -> FileSystem {
     let input = read_input(7, purp);
-    let mut fs = FileSystem2::new();
+    let mut fs = FileSystem::new();
     let mut idx: usize = 0;
     while idx < input.len() {
         let line = &input[idx];
@@ -173,9 +153,8 @@ fn parse_input(purp: Purpose) -> FileSystem2 {
     fs
 }
 
-fn execCommand(cmd_and_output: &[String], fs: &mut FileSystem2) {
+fn execCommand(cmd_and_output: &[String], fs: &mut FileSystem) {
     let cmd = &cmd_and_output[0];
-    println!("{}", cmd);
     if (&cmd[2..]).starts_with("cd") {
         fs.cd(&cmd[5..]);
     } else {
@@ -194,12 +173,12 @@ mod tests {
     #[test]
     fn part_1_works() {
         let mut day_07 = init_test();
-        assert_eq!(day_07.part_1(), "CMZ");
+        assert_eq!(day_07.part_1(), "95437");
     }
 
     #[test]
     fn part_2_works() {
         let mut day_07 = init_test();
-        assert_eq!(day_07.part_2(), "MCD");
+        assert_eq!(day_07.part_2(), "24933642");
     }
 }
