@@ -20,17 +20,17 @@ enum Instruction {
 }
 
 struct Cpu {
-    X: i16,
+    x: i16,
     cycles: usize,
-    CRT: Vec<Vec<char>>,
+    crt: Vec<Vec<char>>,
 }
 
 impl Cpu {
     fn init() -> Self {
         return Cpu {
-            X: 1,
+            x: 1,
             cycles: 0,
-            CRT: vec![vec!['.'; 40]; 6],
+            crt: vec![vec!['.'; 40]; 6],
         };
     }
 
@@ -38,7 +38,7 @@ impl Cpu {
         self.draw_pixel(self.cycles);
         self.draw_pixel(self.cycles + 1);
         self.cycles += 2;
-        self.X += v;
+        self.x += v;
         //self.draw_pixel(self.cycles);
     }
 
@@ -57,16 +57,16 @@ impl Cpu {
     fn draw_pixel(&mut self, cycle: usize) {
         let row: usize = (cycle / 40) % 6;
         let col: usize = cycle % 40;
-        let pixel = self.CRT.get_mut(row).unwrap().get_mut(col).unwrap();
-        if col as i16 >= self.X - 1 && col as i16 <= self.X + 1 {
+        let pixel = self.crt.get_mut(row).unwrap().get_mut(col).unwrap();
+        if col as i16 >= self.x - 1 && col as i16 <= self.x + 1 {
             *pixel = '#'
         } else {
             *pixel = '.'
         }
     }
 
-    fn get_CRT(&self) -> String {
-        self.CRT
+    fn get_crt(&self) -> String {
+        self.crt
             .iter()
             .map(|line| line.into_iter().collect())
             .collect::<Vec<String>>()
@@ -80,7 +80,7 @@ impl DayChallenge for Day10 {
         let mut next_relevant_cycle: usize = 20;
         let mut sum_strengths = 0;
         self.instructions.iter().for_each(|i| {
-            let prev_val = cpu.X;
+            let prev_val = cpu.x;
             cpu.execute(i);
             if cpu.cycles >= next_relevant_cycle {
                 sum_strengths += prev_val * next_relevant_cycle as i16;
@@ -95,7 +95,7 @@ impl DayChallenge for Day10 {
         self.instructions.iter().for_each(|i| {
             cpu.execute(i);
         });
-        format!("\n{}", cpu.get_CRT())
+        format!("\n{}", cpu.get_crt())
     }
 }
 

@@ -11,3 +11,4 @@ utils = { path = "../utils" }
 enum-map = "*"
 phf = { version = "*", features = ["macros"] }
 nalgebra = "*"
+num-bigint = "*"

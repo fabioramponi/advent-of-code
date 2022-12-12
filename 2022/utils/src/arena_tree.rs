@@ -1,14 +1,14 @@
 #[derive(Debug, Default)]
-pub struct ArenaTree<T> 
+pub struct ArenaTree<T>
 where
-    T: PartialEq
+    T: PartialEq,
 {
     pub arena: Vec<Node<T>>,
 }
 
 impl<T> ArenaTree<T>
 where
-    T: PartialEq
+    T: PartialEq,
 {
     pub fn node(&mut self, val: T) -> usize {
         //first see if it exists
@@ -27,8 +27,10 @@ where
         self.arena.len()
     }
 
-    fn edges(&self) -> usize {
-        self.arena.iter().fold(0, |acc, node| acc + node.children.len())
+    /*fn edges(&self) -> usize {
+        self.arena
+            .iter()
+            .fold(0, |acc, node| acc + node.children.len())
     }
 
     fn depth(&self, idx: usize) -> usize {
@@ -36,13 +38,12 @@ where
             Some(id) => 1 + self.depth(id),
             None => 0,
         }
-    }
+    }*/
 
-    pub fn insert_or_get(&mut self, new_node: T, parent_node_idx: usize) -> usize{
+    pub fn insert_or_get(&mut self, new_node: T, parent_node_idx: usize) -> usize {
         let prev_sz = self.size();
         let new_node_idx = self.node(new_node);
-        if (prev_sz<self.size()) {
-
+        if prev_sz < self.size() {
             // set orbit
             match self.arena[new_node_idx].parent {
                 Some(_) => panic!("Attempt to overwrite existing orbit"),
@@ -58,7 +59,7 @@ where
 #[derive(Debug)]
 pub struct Node<T>
 where
-    T: PartialEq
+    T: PartialEq,
 {
     pub idx: usize,
     pub val: T,
@@ -68,7 +69,7 @@ where
 
 impl<T> Node<T>
 where
-    T: PartialEq
+    T: PartialEq,
 {
     fn new(idx: usize, val: T) -> Self {
         Self {
