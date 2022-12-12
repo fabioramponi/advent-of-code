@@ -1,20 +1,20 @@
 use crate::DayChallenge;
-use num_bigint::BigUint;
+use primes::factors;
 use utils::read_input;
 use utils::Purpose;
 
 struct Monkey {
-    items: Vec<u32>,
-    operation: Box<dyn Fn(u32) -> u32>,
-    test: u32,
+    items: Vec<u64>,
+    operation: Box<dyn Fn(u64) -> u64>,
+    test: u64,
     if_true: usize,
     if_false: usize,
-    activity: u32,
+    activity: u64,
 }
 
 struct ThrowTo {
     to_monkey: usize,
-    item: u32,
+    item: u64,
 }
 
 impl Monkey {
@@ -48,7 +48,7 @@ impl Day11 {
         }
     }
 
-    fn worry_level_after(&mut self, n_turns: usize, divide: bool) -> u32 {
+    fn worry_level_after(&mut self, n_turns: usize, divide: bool) -> u64 {
         for _ in 0..n_turns {
             for monkey_idx in 0..self.monkeys.len() {
                 let throws = self.monkeys[monkey_idx].throw_items(divide);
@@ -85,7 +85,7 @@ fn parse_input(purp: Purpose) -> Vec<Monkey> {
         .into_iter()
         .map(|ms| {
             //let _idx: usize = ms[0].split_whitespace().last().unwrap().parse().unwrap();
-            let items: Vec<u32> = ms[1]
+            let items: Vec<u64> = ms[1]
                 .split("items: ")
                 .last()
                 .unwrap()
@@ -93,10 +93,10 @@ fn parse_input(purp: Purpose) -> Vec<Monkey> {
                 .map(|n_str| n_str.trim().parse().unwrap())
                 .collect();
             let operation = Box::new(parse_expression(ms[2].split("= ").last().unwrap()));
-            let test: u32 = ms[3].split_whitespace().last().unwrap().parse().unwrap();
+            let test: u64 = ms[3].split_whitespace().last().unwrap().parse().unwrap();
             let if_true: usize = ms[4].split_whitespace().last().unwrap().parse().unwrap();
             let if_false: usize = ms[5].split_whitespace().last().unwrap().parse().unwrap();
-            let activity: u32 = 0;
+            let activity: u64 = 0;
 
             Monkey {
                 items,
@@ -110,7 +110,7 @@ fn parse_input(purp: Purpose) -> Vec<Monkey> {
         .collect()
 }
 
-fn parse_expression(s: &str) -> Box<dyn Fn(u32) -> u32> {
+fn parse_expression(s: &str) -> Box<dyn Fn(u64) -> u64> {
     let splitted: Vec<&str> = s.split_whitespace().collect();
     if splitted[2] == "old" {
         match splitted[1] {
@@ -119,7 +119,7 @@ fn parse_expression(s: &str) -> Box<dyn Fn(u32) -> u32> {
             &_ => todo!(),
         }
     } else {
-        let val = splitted[2].parse::<u32>().unwrap();
+        let val = splitted[2].parse::<u64>().unwrap();
         match splitted[1] {
             "+" => Box::new(move |n| n + val),
             "*" => Box::new(move |n| n * val),
