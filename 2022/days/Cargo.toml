@@ -12,3 +12,4 @@ enum-map = "*"
 phf = { version = "*", features = ["macros"] }
 nalgebra = "*"
 primes = "*"
+priority-queue = "*"

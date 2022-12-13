@@ -1,5 +1,4 @@
 use crate::DayChallenge;
-use primes::factors;
 use utils::read_input;
 use utils::Purpose;
 
@@ -53,6 +52,7 @@ impl Day11 {
             for monkey_idx in 0..self.monkeys.len() {
                 let throws = self.monkeys[monkey_idx].throw_items(divide);
                 throws.iter().for_each(|t| {
+                    //println!("  - {}->{}: {}", monkey_idx, t.to_monkey, t.item);
                     self.monkeys
                         .get_mut(t.to_monkey)
                         .unwrap()
@@ -90,6 +90,7 @@ fn parse_input(purp: Purpose) -> Vec<Monkey> {
                 .last()
                 .unwrap()
                 .split(",")
+                .filter(|s| !s.trim().is_empty())
                 .map(|n_str| n_str.trim().parse().unwrap())
                 .collect();
             let operation = Box::new(parse_expression(ms[2].split("= ").last().unwrap()));
