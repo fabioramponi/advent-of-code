@@ -146,7 +146,7 @@ impl DayChallenge for Day12 {
             .map
             .iter()
             .enumerate()
-            .filter(|&(i, &v)| v == 'a' as u32)
+            .filter(|&(_, &v)| v == 'a' as u32)
             .map(|(i, _)| {
                 let start = self.height_map.map.vector_to_matrix_index(i);
                 Position(start.0, start.1)
@@ -157,7 +157,7 @@ impl DayChallenge for Day12 {
         for s in starts {
             let this_shortest = self.height_map.find_shortest(s);
             if this_shortest.is_some() && this_shortest.unwrap() < &shortest {
-                shortest = *this_shortest.unwrap();
+                shortest = *self.height_map.find_shortest(s).unwrap();
             }
         }
         shortest.to_string()
