@@ -17,10 +17,10 @@ struct ThrowTo {
 }
 
 impl Monkey {
-    fn throw_items(&mut self, divide: bool) -> Vec<ThrowTo> {
+    fn throw_items(&mut self, divide: bool, monkey_mod: u64) -> Vec<ThrowTo> {
         let mut res: Vec<ThrowTo> = vec![];
         while !self.items.is_empty() {
-            let initial_item = self.items.pop().unwrap();
+            let initial_item = self.items.pop().unwrap() % monkey_mod;
             let after_inspect = (self.operation)(initial_item);
             let item = if divide {
                 after_inspect / 3
@@ -38,19 +38,30 @@ impl Monkey {
 
 pub struct Day11 {
     monkeys: Vec<Monkey>,
+    mod_monkeys: u64,
+    purp: Purpose,
 }
 
 impl Day11 {
     pub fn init(purp: Purpose) -> Self {
+        let m = parse_input(&purp);
+        let mod_monkeys = m.iter().fold(1, |acc, v| acc * v.test);
         Day11 {
-            monkeys: parse_input(purp),
+            monkeys: m,
+            mod_monkeys: mod_monkeys,
+            purp: purp,
         }
+    }
+
+    pub fn reinit(&mut self) {
+        self.monkeys = parse_input(&self.purp);
+        self.mod_monkeys = self.monkeys.iter().fold(1, |acc, v| acc * v.test);
     }
 
     fn worry_level_after(&mut self, n_turns: usize, divide: bool) -> u64 {
         for _ in 0..n_turns {
             for monkey_idx in 0..self.monkeys.len() {
-                let throws = self.monkeys[monkey_idx].throw_items(divide);
+                let throws = self.monkeys[monkey_idx].throw_items(divide, self.mod_monkeys);
                 throws.iter().for_each(|t| {
                     //println!("  - {}->{}: {}", monkey_idx, t.to_monkey, t.item);
                     self.monkeys
@@ -70,15 +81,17 @@ impl Day11 {
 
 impl DayChallenge for Day11 {
     fn part_1(&mut self) -> String {
+        self.reinit();
         self.worry_level_after(20, true).to_string()
     }
 
     fn part_2(&mut self) -> String {
-        self.worry_level_after(1000, false).to_string()
+        self.reinit();
+        self.worry_level_after(10000, false).to_string()
     }
 }
 
-fn parse_input(purp: Purpose) -> Vec<Monkey> {
+fn parse_input(purp: &Purpose) -> Vec<Monkey> {
     let input = read_input(11, purp);
     let monkeys_str = input.chunks(7);
     monkeys_str

@@ -9,7 +9,7 @@ pub struct Day10 {
 impl Day10 {
     pub fn init(purp: Purpose) -> Self {
         Day10 {
-            instructions: parse_input(purp),
+            instructions: parse_input(&purp),
         }
     }
 }
@@ -99,7 +99,7 @@ impl DayChallenge for Day10 {
     }
 }
 
-fn parse_input(purp: Purpose) -> Vec<Instruction> {
+fn parse_input(purp: &Purpose) -> Vec<Instruction> {
     let input = read_input(10, purp);
     input
         .iter()

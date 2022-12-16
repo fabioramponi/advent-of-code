@@ -32,7 +32,7 @@ pub struct Day03 {
 impl Day03 {
     pub fn init(purp: Purpose) -> Self {
         Day03 {
-            rucksacks: parse_input(purp),
+            rucksacks: parse_input(&purp),
         }
     }
 }
@@ -77,7 +77,7 @@ impl DayChallenge for Day03 {
     }
 }
 
-fn parse_input(purp: Purpose) -> Vec<Rucksack> {
+fn parse_input(purp: &Purpose) -> Vec<Rucksack> {
     let input = read_input(3, purp);
     let mut res: Vec<Rucksack> = Vec::new();
 

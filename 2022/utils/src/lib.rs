@@ -11,7 +11,7 @@ pub enum Purpose {
     Challenge,
 }
 
-pub fn read_input(day: u8, purp: Purpose) -> Vec<String> {
+pub fn read_input(day: u8, purp: &Purpose) -> Vec<String> {
     let resources_path = env::var("AOC2022_RESOURCES_PATH")
         .unwrap_or(String::from_str("~/dev/advent-of-code/2022/resources").unwrap());
     let folder = format!("day_{:02}", day);

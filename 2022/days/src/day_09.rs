@@ -63,7 +63,7 @@ pub struct Day09 {
 impl Day09 {
     pub fn init(purp: Purpose) -> Self {
         Day09 {
-            moves: parse_input(purp),
+            moves: parse_input(&purp),
         }
     }
 }
@@ -157,7 +157,7 @@ impl DayChallenge for Day09 {
     }
 }
 
-fn parse_input(purp: Purpose) -> Vec<Move> {
+fn parse_input(purp: &Purpose) -> Vec<Move> {
     let input = read_input(9, purp);
     input
         .iter()

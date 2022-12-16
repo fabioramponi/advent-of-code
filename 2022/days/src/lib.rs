@@ -12,6 +12,7 @@ pub mod day_09;
 pub mod day_10;
 pub mod day_11;
 pub mod day_12;
+pub mod day_13;
 pub mod day_15;
 
 pub trait DayChallenge {
@@ -33,6 +34,7 @@ pub fn get_day(day: u8, purp: Purpose) -> Option<Box<dyn DayChallenge>> {
         10 => Some(Box::new(day_10::Day10::init(purp))),
         11 => Some(Box::new(day_11::Day11::init(purp))),
         12 => Some(Box::new(day_12::Day12::init(purp))),
+        13 => Some(Box::new(day_13::Day13::init(purp))),
         15 => Some(Box::new(day_15::Day15::init(purp))),
         _ => None,
     }

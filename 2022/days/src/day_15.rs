@@ -42,7 +42,7 @@ impl Sensor {
 impl Day15 {
     pub fn init(purp: Purpose) -> Self {
         Day15 {
-            sensors: parse_input(purp),
+            sensors: parse_input(&purp),
         }
     }
 
@@ -83,10 +83,8 @@ impl DayChallenge for Day15 {
             let covered = self.covered_at_line(i);
             if covered.len() > 1 {
                 let x = covered[0].1 as i64 + 1i64;
-                println!("found ({}, {}), {:?}", x, i, covered);
                 return (x * 4000000 + i as i64).to_string();
             } else if covered[0].0 > 0 {
-                println!("found {}, {}, {:?}", 0, i, covered);
                 return i.to_string();
             } else if covered[0].1 < 4000000 {
                 return ((covered[0].1 + 1) * 4000000 + i).to_string();
@@ -96,7 +94,7 @@ impl DayChallenge for Day15 {
     }
 }
 
-fn parse_input(purp: Purpose) -> Vec<Sensor> {
+fn parse_input(purp: &Purpose) -> Vec<Sensor> {
     let input = read_input(15, purp);
     let re = Regex::new(
         r"Sensor at x=(?P<sx>-?\d+), y=(?P<sy>-?\d+): closest beacon is at x=(?P<bx>-?\d+), y=(?P<by>-?\d+)",

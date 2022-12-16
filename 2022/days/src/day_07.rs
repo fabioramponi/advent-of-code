@@ -124,7 +124,7 @@ pub struct Day07 {
 impl Day07 {
     pub fn init(purp: Purpose) -> Self {
         Day07 {
-            fs: parse_input(purp),
+            fs: parse_input(&purp),
         }
     }
 }
@@ -162,7 +162,7 @@ impl DayChallenge for Day07 {
     }
 }
 
-fn parse_input(purp: Purpose) -> FileSystem {
+fn parse_input(purp: &Purpose) -> FileSystem {
     let input = read_input(7, purp);
     let mut fs = FileSystem::new();
     let mut idx: usize = 0;

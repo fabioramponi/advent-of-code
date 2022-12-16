@@ -8,7 +8,7 @@ pub struct Day06 {
 
 impl Day06 {
     pub fn init(purp: Purpose) -> Self {
-        let v = read_input(6, purp);
+        let v = read_input(6, &purp);
         //let (stack, moves) = parse_input(purp);
         Day06 {
             signal: v.iter().next().unwrap().as_bytes().to_vec(),

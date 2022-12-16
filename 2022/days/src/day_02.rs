@@ -46,7 +46,7 @@ pub struct Day02 {
 impl Day02 {
     pub fn init(purp: Purpose) -> Self {
         Day02 {
-            strategy_guide: parse_input(purp),
+            strategy_guide: parse_input(&purp),
             wins: enum_map! {
             Output::PAPER => Output::ROCK,
             Output::SCISSOR => Output::PAPER,
@@ -114,7 +114,7 @@ impl DayChallenge for Day02 {
     }
 }
 
-fn parse_input(purp: Purpose) -> Vec<Strategy> {
+fn parse_input(purp: &Purpose) -> Vec<Strategy> {
     let input = read_input(2, purp);
     let turns_str: Vec<Vec<String>> = input
         .iter()

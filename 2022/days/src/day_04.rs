@@ -40,7 +40,7 @@ pub struct Day04 {
 impl Day04 {
     pub fn init(purp: Purpose) -> Self {
         Day04 {
-            pairs: parse_input(purp),
+            pairs: parse_input(&purp),
         }
     }
 }
@@ -63,7 +63,7 @@ impl DayChallenge for Day04 {
     }
 }
 
-fn parse_input(purp: Purpose) -> Vec<Pair> {
+fn parse_input(purp: &Purpose) -> Vec<Pair> {
     let input = read_input(4, purp);
     let re = Regex::new(r"(\d+)-(\d+),(\d+)-(\d+)").unwrap();
     input

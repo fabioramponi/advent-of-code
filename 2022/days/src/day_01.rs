@@ -9,7 +9,7 @@ pub struct Day01 {
 impl Day01 {
     pub fn init(purp: Purpose) -> Self {
         Day01 {
-            energies: (parse_input(purp)),
+            energies: (parse_input(&purp)),
         }
     }
 }
@@ -32,7 +32,7 @@ impl DayChallenge for Day01 {
     }
 }
 
-fn parse_input(purp: Purpose) -> Vec<i32> {
+fn parse_input(purp: &Purpose) -> Vec<i32> {
     let input = read_input(1, purp);
     let mut energies: Vec<i32> = Vec::new();
     let mut total: i32 = 0;

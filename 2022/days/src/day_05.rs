@@ -17,7 +17,7 @@ struct Move {
 
 impl Day05 {
     pub fn init(purp: Purpose) -> Self {
-        let (stack, moves) = parse_input(purp);
+        let (stack, moves) = parse_input(&purp);
         Day05 { stack, moves }
     }
 }
@@ -51,7 +51,7 @@ impl DayChallenge for Day05 {
     }
 }
 
-fn parse_input(purp: Purpose) -> (Vec<Vec<u8>>, Vec<Move>) {
+fn parse_input(purp: &Purpose) -> (Vec<Vec<u8>>, Vec<Move>) {
     let input = read_input(5, purp);
 
     let stack_size: usize = input

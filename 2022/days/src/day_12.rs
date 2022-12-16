@@ -125,7 +125,7 @@ pub struct Day12 {
 impl Day12 {
     pub fn init(purp: Purpose) -> Self {
         Day12 {
-            height_map: parse_input(purp),
+            height_map: parse_input(&purp),
         }
     }
 }
@@ -164,7 +164,7 @@ impl DayChallenge for Day12 {
     }
 }
 
-fn parse_input(purp: Purpose) -> HeightMap {
+fn parse_input(purp: &Purpose) -> HeightMap {
     let input = read_input(12, purp);
     let field: Vec<u32> = input
         .iter()
