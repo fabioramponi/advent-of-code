@@ -85,6 +85,14 @@ impl DayChallenge for Day11 {
         self.worry_level_after(20, true).to_string()
     }
 
+    /* As someone else in this thread mentions, the solution lies with Chinese remainder theorem.
+    In the context of this problem, you can take the product of all divisors that the monkeys use to evaluate where to throw the item next,
+    and use that to modulus every big number down without changing the outcome.
+    For example, let's say you only had 2 monkeys and they had "divisible by 5" and "divisible by 8" as their evaluation.
+    You can calculate the product of those two (5 * 8 = 40) just once at the start. Then after every operation, on every number,
+    you simply do n = n%40 and you get the number's most essential form necessary for the rest of the algorithm, without changing the outcome.
+    This way even numbers that were supposed to become 100s of digits long become small enough to handle.
+     */
     fn part_2(&mut self) -> String {
         self.reinit();
         self.worry_level_after(10000, false).to_string()
